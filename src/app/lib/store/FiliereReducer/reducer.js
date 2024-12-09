@@ -4,7 +4,6 @@ const { createSlice } = require("@reduxjs/toolkit");
 
 
 
-il n y a pas de client.setKey
 const initialState = {
   filieres: [],
   error: "",
