@@ -17,19 +17,7 @@ export const associationReducer = createSlice({
   
   extraReducers: (builder) => {
     builder
-      .addCase(getFilieres.fulfilled, (state, action) => {
-        state.filieres = action.payload.documents;
-        state.loading = false;
-      })
-      .addCase(getFilieres.pending, (state, action) => {
-        state.loading = true;
-      })
-      .addCase(getFilieres.rejected, (state, action) => {
-        
-        state.error = action.error.message;
-        state.loading = false;
-
-      })
+     
       
       .addCase(getAssociations.pending, (state) => {
         state.loading = true;
