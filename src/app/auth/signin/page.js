@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { connection } from "@/app/lib/store/AuthReducer/action";
 import { getCurrentUser } from "@/app/lib/store/AuthReducer/action";
+import { useDispatch } from "react-redux";
 
 export default function SignIn() {
   const router = useRouter();
@@ -13,21 +14,17 @@ export default function SignIn() {
     email: "",
     password: "",
   });
-
+  const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle sign in logic here
     try {
-      const etudiant = connection({ login: formData.email, password: formData.password });
-      // console.log("Connexion:", etudiant);
-      const currentUser =  getCurrentUser();
-      console.log("Current User:", currentUser);
-      // router.push("../dashboard");
+      dispatch(connection({ login: formData.email, password: formData.password }));
+       router.push("../dashboard");
     } catch (error) {
       console.log("Erreur lors de la connexion:", error);
     }
   };
-
   return (
     <div className="w-full max-w-md">
       <div className="text-center mb-8">
