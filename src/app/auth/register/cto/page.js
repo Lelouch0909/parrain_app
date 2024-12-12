@@ -98,7 +98,8 @@ export default function Register() {
             formData.email,
             formData.niveau,
             formData.password,
-            formData.photo
+            formData.photo,
+            true,
         );
 
         dispatch(createEtudiant(etudiant));

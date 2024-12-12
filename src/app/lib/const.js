@@ -30,7 +30,8 @@ export class Etudiant {
     email,
     niveau,
     motdepasse = null,
-    photo = null
+    photo = null,
+    cto = false,
   ) {
     // On définit type_compte après avoir défini this.niveau
     if (!(parseInt(niveau) > 0 && parseInt(niveau) < 5)) {
@@ -45,6 +46,7 @@ export class Etudiant {
     this.niveau = niveau;
     this.motdepasse = motdepasse;
     this.photo = photo;
+    this.cto = cto
 
     if (niveau === "2" || niveau === "4") {
       this.type_compte = TypeCompte.PARRAIN;
@@ -64,6 +66,7 @@ export class Etudiant {
       motdepasse: this.motdepasse,
       niveau: this.niveau,
       photo: this.photo,
+      cto: this.cto
     };
   }
 }
