@@ -11,6 +11,7 @@ import "./style.css";
 
 export default function Register() {
   const router = useRouter();
+  const { account } = useSelector((state) => state.auth);
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [filiere, setFiliere] = useState("");
@@ -50,6 +51,18 @@ export default function Register() {
     // Charger la liste des filières
     dispatch(getFilieres());
   }, [dispatch]);
+  useEffect(() => {
+    if (account) {
+      console.log(account);
+      
+      router.push("../dashboard");
+    }
+  }, [account, router]);
+
+  useEffect(() => {
+      console.log(account);
+   
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,9 +84,7 @@ export default function Register() {
         formData.password,
         formData.photo
       );
-      createEtudiant(etudiant);
-      router.push("../dashboard");
-      //   setFormData({ ...formData, photo: e.target.files[0] });
+      dispatch(createEtudiant(etudiant))
     }
   };
 
@@ -153,7 +164,11 @@ export default function Register() {
                 <label className="block text-sm mb-2">Filiere</label>
                 <select
                   value={formData.filiereId}
-                  onChange={(e) => setFormData({ ...formData, filiereId: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, filiereId: e.target.value });
+
+                    setFiliere(e.target.value);
+                  }}
                   className="w-full p-3 rounded bg-[#001219] border border-gray-700 
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
                     text-gray-200"
@@ -162,14 +177,11 @@ export default function Register() {
                   <option value="" className="text-gray-400">
                     Sélectionnez une filière
                   </option>
-                  {filieres?.map((filiere) => (
-                    <option 
-                      key={filiere.$id} 
-                      value={filiere.$id}
-                    >
+                  {filieres ? filieres.map((filiere) => (
+                    <option key={filiere.$id} value={filiere.$id}>
                       {filiere.nom_filiere}
                     </option>
-                  ))}
+                  )) : ''}
                 </select>
               </div>
 
@@ -178,7 +190,9 @@ export default function Register() {
                 <input
                   type="number"
                   value={formData.niveau}
-                  onChange={(e) => setFormData({ ...formData, niveau: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, niveau: e.target.value })
+                  }
                   className="w-full p-3 rounded bg-[#001219] border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   required
                 />

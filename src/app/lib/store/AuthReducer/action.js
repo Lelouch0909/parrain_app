@@ -35,6 +35,8 @@ export const createEtudiant = createAsyncThunk(
   "auth/createUser",
   async (user, { rejectWithValue }) => {
     try {
+      console.log("creation de l'etudiant");
+      
       if (!(user instanceof Etudiant)) {
         throw new Error("user is not an instance of Etudiant");
       }
@@ -86,6 +88,8 @@ export const createEtudiant = createAsyncThunk(
         userData.photo_id
       );
     } catch (error) {
+      console.log(error);
+      
       return rejectWithValue(error.message);
     }
   }
