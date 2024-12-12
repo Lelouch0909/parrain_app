@@ -5,11 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createEtudiant } from "@/app/lib/store/AuthReducer/action";
 import { Etudiant } from "@/app/lib/const";
+import { useDispatch, useSelector } from "react-redux";
+import { getFilieres } from "@/app/lib/store/FiliereReducer/action";
+import "./style.css";
 
 export default function Register() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const [filiere, setFiliere] = useState("");
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -22,6 +27,9 @@ export default function Register() {
   });
 
   const [isParamsPresent, setIsParamsPresent] = useState(false);
+
+  const dispatch = useDispatch();
+  const filieres = useSelector((state) => state.filieres.filieres);
 
   useEffect(() => {
     // Lire les paramètres de l'URL
@@ -38,6 +46,11 @@ export default function Register() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    // Charger la liste des filières
+    dispatch(getFilieres());
+  }, [dispatch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -50,7 +63,7 @@ export default function Register() {
 
       const etudiant = new Etudiant(
         formData.name,
-        formData.filiereId,
+        filiere,
         formData.matricule,
         formData.numero,
         formData.email,
@@ -138,15 +151,26 @@ export default function Register() {
             <>
               <div>
                 <label className="block text-sm mb-2">Filiere</label>
-                <input
-                  type="text"
+                <select
                   value={formData.filiereId}
-                  onChange={(e) =>
-                    setFormData({ ...formData, filiereId: e.target.value })
-                  }
-                  className="w-full p-3 rounded bg-[#001219] border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  onChange={(e) => setFormData({ ...formData, filiereId: e.target.value })}
+                  className="w-full p-3 rounded bg-[#001219] border border-gray-700 
+                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
+                    text-gray-200"
                   required
-                />
+                >
+                  <option value="" className="text-gray-400">
+                    Sélectionnez une filière
+                  </option>
+                  {filieres?.map((filiere) => (
+                    <option 
+                      key={filiere.$id} 
+                      value={filiere.$id}
+                    >
+                      {filiere.nom_filiere}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -154,9 +178,7 @@ export default function Register() {
                 <input
                   type="number"
                   value={formData.niveau}
-                  onChange={(e) =>
-                    setFormData({ ...formData, niveau: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, niveau: e.target.value })}
                   className="w-full p-3 rounded bg-[#001219] border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   required
                 />
@@ -207,7 +229,10 @@ export default function Register() {
 
           <p className="text-center text-sm text-gray-400">
             Already have an account?{" "}
-            <Link href="/auth/signin" className="text-blue-400 hover:text-blue-300">
+            <Link
+              href="/auth/signin"
+              className="text-blue-400 hover:text-blue-300"
+            >
               Sign in
             </Link>
           </p>
