@@ -28,3 +28,19 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+
+// const handleFileChange = (e) => {
+//   const etudiant = new Etudiant(
+//     formData.name,
+//     formData.filiereId,
+//     formData.matricule,
+//     formData.numero,
+//     formData.email,
+//     formData.niveau,
+//     formData.password,
+//     e.target.files[0]
+//   );
+//   dispatchEvent(createEtudiant(etudiant));
+//   setFormData({ ...formData, photo: e.target.files[0] });
+// };
