@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CircleDollarSign } from "lucide-react";
 
 export default function Home() {
   return (
@@ -7,8 +6,7 @@ export default function Home() {
       <header className="p-4">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
-            <CircleDollarSign size={32} />
-            <span>Sponsorship</span>
+            <span>Parainage</span>
           </Link>
           <div className="flex gap-4">
             <Link
@@ -28,9 +26,9 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-5xl font-bold mb-6">Welcome to Sponsorship</h1>
+        <h1 className="text-5xl font-bold mb-6">Bienvenue Au Parainage 2024/2025</h1>
         <p className="text-xl text-gray-400 mb-8">
-          Connect with sponsors and manage your partnerships efficiently.
+          Veuillez vous connecter pour continuer.
         </p>
         <div className="flex justify-center gap-4">
           <Link
