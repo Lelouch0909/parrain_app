@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 
 export function TimeUnit({ value, label }) {
   return (
-    <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-xl shadow-lg border border-gray-700">
-      <span className="text-6xl font-bold text-emerald-400 font-mono">
-        {value.toString().padStart(2, '0')}
-      </span>
-      <p className="text-sm text-gray-300 mt-2 text-center font-medium">
-        {label}
-      </p>
-    </div>
+      <div className="flex flex-col items-center">
+          <span className="text-2xl md:text-4xl font-bold text-emerald-400">
+              {value}
+          </span>
+          <span className="text-sm md:text-base text-emerald-200">
+              {label}
+          </span>
+      </div>
   );
 }
+
 
 // Définir les types des props avec PropTypes
 TimeUnit.propTypes = {

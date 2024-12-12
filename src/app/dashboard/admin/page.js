@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <Provider store={store}>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[#001219] text-emerald-400">
         <Header />
 
         <main className="container mx-auto px-4 py-8">
