@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CircleDollarSign } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { connection } from "@/app/lib/store/AuthReducer/action";
+import { getCurrentUser } from "@/app/lib/store/AuthReducer/action";
 
 export default function SignIn() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -14,16 +17,21 @@ export default function SignIn() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle sign in logic here
-    console.log("Sign in:", formData);
+    try {
+      const etudiant = connection({ login: formData.email, password: formData.password });
+      // console.log("Connexion:", etudiant);
+      const currentUser =  getCurrentUser();
+      console.log("Current User:", currentUser);
+      // router.push("../dashboard");
+    } catch (error) {
+      console.log("Erreur lors de la connexion:", error);
+    }
   };
 
   return (
     <div className="w-full max-w-md">
       <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <CircleDollarSign size={48} />
-        </div>
-        <h1 className="text-3xl font-bold mb-2">Sponsorship</h1>
+        <h1 className="text-3xl font-bold mb-2">Parainage</h1>
         <p className="text-gray-400">
           Connectez-vous directement à votre compte ou avec Google.
         </p>

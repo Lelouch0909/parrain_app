@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { CountdownTimer } from '../components/CountdownTimer';
+import { getCurrentUser } from '../lib/store/AuthReducer/action';
 
 function App() {
   return (
