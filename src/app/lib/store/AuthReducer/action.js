@@ -1,4 +1,3 @@
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database, account, storage, appwriteConfig } from "../../appwrite/base";
 import { ID, Query } from "appwrite";
@@ -16,16 +15,15 @@ export const connection = createAsyncThunk(
       await account.createEmailPasswordSession(login, password);
       const currentUser = await getCurrentUser();
       
-      return new Etudiant(
-        currentUser.nom,
-        currentUser.filiere,
-        currentUser.matricule,
-        currentUser.numero,
-        currentUser.email,
-        currentUser.niveau,
-        null,
-        currentUser.photo_id
-      );
+      return {
+        nom: currentUser.nom,
+        filiere: currentUser.filiere,
+        matricule: currentUser.matricule,
+        numero: currentUser.numero,
+        email: currentUser.email,
+        niveau: currentUser.niveau,
+        photo_id: currentUser.photo_id,
+      };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -129,16 +127,15 @@ export const getCurrentUser = createAsyncThunk(
 
       const userData = response.documents[0];
       
-      return new Etudiant(
-        userData.nom,
-        userData.filiere,
-        userData.matricule,
-        userData.numero,
-        userData.email,
-        userData.niveau,
-        null,
-        userData.photo_id
-      );
+      return {
+        nom: userData.nom,
+        filiere: userData.filiere,
+        matricule: userData.matricule,
+        numero: userData.numero,
+        email: userData.email,
+        niveau: userData.niveau,
+        photo_id: userData.photo_id,
+      };
     } catch (error) {
       return rejectWithValue(error.message);
     }

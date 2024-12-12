@@ -20,7 +20,7 @@ export default function SignIn() {
     // Handle sign in logic here
     try {
       dispatch(connection({ login: formData.email, password: formData.password }));
-       router.push("../dashboard/admin");
+       router.push("../dashboard");
     } catch (error) {
       console.log("Erreur lors de la connexion:", error);
     }

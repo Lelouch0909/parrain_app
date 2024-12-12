@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { createEtudiant } from "@/app/lib/store/AuthReducer/action";
-import { Etudiant } from "@/app/lib/const";
+import { createEtudiant } from "../../lib/store/AuthReducer/action";
+import { Etudiant } from "../../lib/const";
 import { useDispatch, useSelector } from "react-redux";
-import { getFilieres } from "@/app/lib/store/FiliereReducer/action";
+import { getFilieres } from "../../lib/store/FiliereReducer/action";
 import "./style.css";
 
 export default function Register() {

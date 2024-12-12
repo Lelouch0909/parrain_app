@@ -53,21 +53,22 @@ export function CountdownTimer() {
 
     return (
         <div className="flex flex-col items-center text-center px-4">
-            <h1 className="text-4xl md:text-5xl font-bold mb-8 text-emerald-400">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-8 text-emerald-400">
                 Les activités débuterons dans
             </h1>
-            <h2 className="text-xl md:text-2xl text-emerald-200 mb-12">
+            <h2 className="text-lg md:text-2xl text-emerald-200 mb-6 md:mb-12">
                 Les parrains seront attribués sous peu
             </h2>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
+            <div className="flex gap-2 md:gap-4 justify-center items-center flex-wrap">
                 <TimeUnit value={timeRemaining.days} label="jours" />
-                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.hours} label="heures" />
-                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.minutes} label="minutes" />
-                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.seconds} label="secondes" />
             </div>
         </div>
     );
+    
 }
