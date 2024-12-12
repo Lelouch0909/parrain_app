@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { connection } from "@/app/lib/store/AuthReducer/action";
-import { getCurrentUser } from "@/app/lib/store/AuthReducer/action";
+import { connection } from "../../lib/store/AuthReducer/action";
+import { getCurrentUser } from "../../lib/store/AuthReducer/action";
 import { useDispatch } from "react-redux";
 
 export default function SignIn() {
@@ -20,7 +20,7 @@ export default function SignIn() {
     // Handle sign in logic here
     try {
       dispatch(connection({ login: formData.email, password: formData.password }));
-       router.push("../dashboard");
+       router.push("../dashboard/admin");
     } catch (error) {
       console.log("Erreur lors de la connexion:", error);
     }

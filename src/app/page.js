@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Provider } from "react-redux";
 import store from "./lib/store";
@@ -19,6 +20,12 @@ export default function Home() {
             >
               Sign in
             </Link>
+            {/* <Link
+              href="/auth/register"
+              className="px-4 py-2 rounded hover:bg-[#002633] transition-colors"
+            >
+              Register As CTO
+            </Link> */}
             <Link
               href="/auth/register"
               className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 transition-colors"
@@ -46,6 +53,12 @@ export default function Home() {
             className="px-6 py-3 rounded border border-gray-700 hover:bg-[#002633] transition-colors"
           >
             Sign In
+          </Link>
+          <Link
+            href="/auth/register/cto"
+            className="px-6 py-3 rounded border border-gray-700 hover:bg-[#002633] transition-colors"
+          >
+            Register As CTO
           </Link>
         </div>
       </main>

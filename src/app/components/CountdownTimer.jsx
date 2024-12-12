@@ -37,7 +37,7 @@ export function CountdownTimer() {
 
     if (isCompleted) {
         return (
-            <div className="text-center">
+            <div className="text-center px-4">
                 <h2 className="text-4xl font-bold text-emerald-400 mb-8">
                     Voici la liste de vos filleules
                 </h2>
@@ -52,18 +52,22 @@ export function CountdownTimer() {
     }
 
     return (
-        <>
-            <h1 className="text-5xl font-bold mb-8 text-emerald-400">Les activités débuterons dans</h1>
-            <h2 className="text-2xl text-emerald-200 mb-12">Le parrains seront attribués sous peu</h2>
-            <div className="flex gap-8 justify-center items-center">
+        <div className="flex flex-col items-center text-center px-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-8 text-emerald-400">
+                Les activités débuterons dans
+            </h1>
+            <h2 className="text-xl md:text-2xl text-emerald-200 mb-12">
+                Les parrains seront attribués sous peu
+            </h2>
+            <div className="flex flex-wrap gap-4 justify-center items-center">
                 <TimeUnit value={timeRemaining.days} label="jours" />
-                <div className="text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.hours} label="heures" />
-                <div className="text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.minutes} label="minutes" />
-                <div className="text-4xl font-bold text-emerald-400">:</div>
+                <div className="text-3xl md:text-4xl font-bold text-emerald-400">:</div>
                 <TimeUnit value={timeRemaining.seconds} label="secondes" />
             </div>
-        </>
+        </div>
     );
 }

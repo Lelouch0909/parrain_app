@@ -18,7 +18,6 @@ export const getAssociations = createAsyncThunk(
       }
 
      
-    
 
       const currentUser = getCurrentUser();
       if (!currentUser) {
