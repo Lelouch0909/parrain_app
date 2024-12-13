@@ -25,6 +25,8 @@ export const connection = createAsyncThunk(
         photo_id: currentUser.photo_id,
       };
     } catch (error) {
+      console.log(error);
+      
       return rejectWithValue(error.message);
     }
   }
@@ -33,13 +35,21 @@ export const connection = createAsyncThunk(
 // Création d'étudiant
 export const createEtudiant = createAsyncThunk(
   "auth/createUser",
-  async (user, { rejectWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
       console.log("creation de l'etudiant");
       
-      if (!(user instanceof Etudiant)) {
-        throw new Error("user is not an instance of Etudiant");
-      }
+      const user = new Etudiant(
+        userData.nom,
+        userData.filiereId,
+        userData.matricule,
+        userData.numero,
+        userData.email,
+        userData.niveau,
+        userData.motdepasse,
+        userData.photo,
+        userData.type_compte
+      );
 
       const newAccount = await account.create(
         ID.unique(),
@@ -77,19 +87,19 @@ export const createEtudiant = createAsyncThunk(
         }
       );
 
-      return new Etudiant(
-        newUser.nom,
-        newUser.filiere,
-        newUser.matricule,
-        newUser.numero,
-        newUser.email,
-        newUser.niveau,
-        null,
-        userData.photo_id
-      );
+      // Retourner un objet simple au lieu d'une instance de classe
+      return {
+        nom: newUser.nom,
+        filiere: newUser.filiere,
+        matricule: newUser.matricule,
+        numero: newUser.numero,
+        email: newUser.email,
+        niveau: newUser.niveau,
+        photo_id: newUser.photo_id,
+        type_compte: newUser.type_compte
+      };
     } catch (error) {
       console.log(error);
-      
       return rejectWithValue(error.message);
     }
   }
@@ -159,3 +169,16 @@ async function uploadFile(file) {
     throw error;
   }
 }
+
+// Action de déconnexion
+export const signOut = createAsyncThunk(
+  "auth/signOut",
+  async (_, { rejectWithValue }) => {
+    try {
+      await account.deleteSession('current');
+      return null;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

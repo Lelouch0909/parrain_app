@@ -1,4 +1,4 @@
-import { createEtudiant, connection, getAccount, getCurrentUser } from "./action";
+import { createEtudiant, connection, getAccount, getCurrentUser, signOut } from "./action";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -71,6 +71,21 @@ export const authReducer = createSlice({
         state.error = action.payload;
         state.loading = false;
         state.user = null;
+      })
+      // Déconnexion
+      .addCase(signOut.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signOut.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.error = null;
+        state.account = null;
+      })
+      .addCase(signOut.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

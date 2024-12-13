@@ -1,25 +1,54 @@
 "use client";
-import React, { useEffect } from 'react';
-import { CountdownTimer } from '../components/CountdownTimer';
-import { getCurrentUser } from '../lib/store/AuthReducer/action';
-import { useDispatch, useSelector } from 'react-redux';
-
+import React, { useEffect } from "react";
+import { CountdownTimer } from "../components/CountdownTimer";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "../lib/store/AuthReducer/action";
+import { useRouter } from "next/navigation";
 
 function App() {
-  const dispach = useDispatch();
-  const { user, account, loading, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, loading, error } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(signOut());
+  };
+
   useEffect(() => {
-    dispach(getCurrentUser());
-  }, [dispach]);
-  // console.log(dispach(getCurrentUser()));
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-  // console.log(user);
-  
+    if (!loading && !user) {
+      router.push("/auth/signin");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
-      <CountdownTimer />
+    <div className="min-h-screen bg-gray-900 text-white">
+      <header className="bg-gray-800 p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold">Parrainage</h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+          >
+            Déconnexion
+          </button>
+        </div>
+      </header>
+
+      <div className="flex flex-col items-center justify-center flex-grow">
+        <CountdownTimer />
+      </div>
     </div>
   );
 }

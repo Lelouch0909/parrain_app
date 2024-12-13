@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { createEtudiant } from "@/app/lib/store/AuthReducer/action";
-import { Etudiant } from "@/app/lib/const";
 import { useDispatch, useSelector } from "react-redux";
-import { getFilieres, addFiliere } from "@/app/lib/store/FiliereReducer/action";
-import { createFiliere } from "@/app/lib/store/FiliereReducer/action";
 import "../style.css";
+import { createFiliere, getFilieres } from "../../../lib/store/FiliereReducer/action";
+import { Etudiant } from "../../../lib/const";
+import { verifyAndGenerateCode } from "../../../lib/store/CodeReducer/action";
+import { createEtudiant } from "../../../lib/store/AuthReducer/action";
 
 export default function Register() {
     const router = useRouter();
@@ -23,7 +23,13 @@ export default function Register() {
     const [secretCode, setSecretCode] = useState(""); // Code secret saisi par l'utilisateur
 
     const [newFiliere, setNewFiliere] = useState(""); // Nouvelle filière à ajouter
-
+    const {success,loading,error} = useSelector((state) => state.code)
+    const {user,loading:authLoading} = useSelector((state) => state.auth)
+    useEffect(() => {
+        if (user) {
+            router.push("../../dashboard/admin");
+        }
+    }, [router, user]);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -57,22 +63,19 @@ export default function Register() {
 
     const handleCodeSubmit = (e) => {
         e.preventDefault();
+        dispatch(verifyAndGenerateCode(secretCode))
 
-        const VALID_CODE = "12345"; // Remplacez par votre code secret
-
-        if (secretCode === VALID_CODE) {
-            setStep(2); // Passer à l'étape 2
-        } else {
-            setAttempts((prev) => prev + 1);
-
-            if (attempts + 1 >= 3) {
-                // Redirection après trois échecs
-                router.push("/");
-            } else {
-                alert("Code incorrect. Veuillez réessayer.");
-            }
-        }
+       
     };
+
+    useEffect(() => {
+        if (success) {
+            setStep(2);
+        }
+        if (error) {
+            alert("code incorrect contactez l'admin");
+        }
+    }, [success, error]);
 
     const handleFiliereSubmit = (e) => {
         e.preventDefault();
@@ -90,21 +93,29 @@ export default function Register() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const etudiant = new Etudiant(
-            formData.name,
-            filieres.find((f) => f.$id === newFiliere)?.nom_filiere || "",
-            formData.matricule,
-            formData.numero,
-            formData.email,
-            formData.niveau,
-            formData.password,
-            formData.photo,
-            true,
-        );
+        const etudiant = {
+            nom: formData.name,
+            filiereId: filieres.find((f) => f.$id === newFiliere)?.nom_filiere || "",
+            matricule: formData.matricule,
+            numero: formData.numero,
+            email: formData.email,
+            niveau: formData.niveau,
+            motdepasse: formData.password,
+            photo: formData.photo,
+            type_compte: true,
+        };
 
         dispatch(createEtudiant(etudiant));
-        router.push("../../dashboard");
     };
+
+    // Ajout du loader pendant la création
+    if (authLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen p-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
 
     const handleFileChange = (e) => {
         setFormData({ ...formData, photo: e.target.files[0] });
@@ -154,12 +165,28 @@ export default function Register() {
                 <div className="bg-[#002633] rounded-lg p-8">
                     <form onSubmit={handleFiliereSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-sm mb-2">Filières existantes</label>
-                            <ul className="text-gray-200">
-                                {filieres?.map((filiere) => (
-                                    <li key={filiere.$id}>{filiere.nom_filiere}</li>
-                                ))}
-                            </ul>
+                            <label className="block text-sm mb-4 text-gray-300 font-medium">Filières existantes</label>
+                            <div className="bg-[#001219] rounded-lg p-4 mb-6">
+                                {filieres?.length > 0 ? (
+                                    <ul className="divide-y divide-gray-700">
+                                        {filieres.map((filiere) => (
+                                            <li 
+                                                key={filiere.$id}
+                                                className="py-3 px-2 flex items-center space-x-3 hover:bg-[#001824] rounded transition-colors"
+                                            >
+                                                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                                    <span className="text-white font-medium">
+                                                        {filiere.nom_filiere.charAt(0).toUpperCase()}
+                                                    </span>
+                                                </div>
+                                                <span className="text-gray-200">{filiere.nom_filiere}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-400 text-center py-2">Aucune filière existante</p>
+                                )}
+                            </div>
                         </div>
 
                         <div>
