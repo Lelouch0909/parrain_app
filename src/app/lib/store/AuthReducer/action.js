@@ -48,7 +48,7 @@ export const createEtudiant = createAsyncThunk(
         userData.niveau,
         userData.motdepasse,
         userData.photo,
-        userData.type_compte
+        userData.cto
       );
 
       const newAccount = await account.create(
@@ -83,7 +83,8 @@ export const createEtudiant = createAsyncThunk(
           type_compte: user.type_compte,
           numero: user.numero,
           filiere: user.filiereId,
-          niveau: user.niveau
+          niveau: user.niveau,
+          cto: user.cto
         }
       );
 
@@ -145,6 +146,8 @@ export const getCurrentUser = createAsyncThunk(
         email: userData.email,
         niveau: userData.niveau,
         photo_id: userData.photo_id,
+        filiere: userData.filiere,
+        cto: userData.cto
       };
     } catch (error) {
       return rejectWithValue(error.message);

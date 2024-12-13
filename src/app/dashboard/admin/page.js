@@ -1,58 +1,97 @@
 "use client";
-
-import { useState } from "react";
-import Header from "../../components/Header";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut, getCurrentUser } from "../../lib/store/AuthReducer/action";
+import { getFullAssociations } from "../../lib/store/AssociationReducer/action";
 import SponsorshipAnimation from "../../components/SponsorshipAnimation";
 import MatchList from "../../components/MatchLists";
-import { mentors, mentees } from "../../data/users";
-import { Provider } from "react-redux";
-import store from "../../lib/store";
 
 export default function Home() {
-  const [matches, setMatches] = useState([]);
-  //   const [mentors, setMentors] = useState([]);
-  //   const [mentees, setMentees] = useState([]);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
+  const { associations } = useSelector((state) => state.associations);
 
-  const handleMatch = (mentor, mentee) => {
-    // Vérifier si le mentor a déjà un filleul
-    const mentorMatches = matches.filter(m => m.mentor.id === mentor.id);
-    const allMentorsHaveMatch = mentors.every(m =>
-      matches.some(match => match.mentor.id === m.id)
-    );
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
 
-    // Si le mentor a déjà un filleul et que tous les mentors n'ont pas encore de filleul
-    if (mentorMatches.length > 0 && !allMentorsHaveMatch) {
-      return;
+  useEffect(() => {
+    if (!loading && !user) {
+      router.back();
     }
+    console.log(user);
+    
+  }, [user, loading, router]);
 
-    // Si le filleul est déjà associé
-    if (matches.some(m => m.mentee.id === mentee.id)) {
-      return;
-    }
-
-    setMatches([...matches, { mentor, mentee }]);
+  const handleLogout = () => {
+    dispatch(signOut());
   };
 
-  return (
-    <Provider store={store}>
-      <div className="min-h-screen bg-[#001219] text-emerald-400">
-        <Header />
-
-        <main className="container mx-auto px-4 py-8">
-          <div className="mb-16">
-            <SponsorshipAnimation
-              mentors={mentors}
-              mentees={mentees}
-              onMatch={handleMatch}
-            />
-          </div>
-
-          <section>
-            <h2 className="text-3xl font-bold mb-8">Matched Pairs</h2>
-            <MatchList matches={matches} />
-          </section>
-        </main>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    </Provider>
+    );
+  }
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-screen bg-[#001219] text-emerald-400">
+      <header className="bg-[#002633] shadow-lg">
+        <div className="container mx-auto px-4 py-4">
+          <div className="grid grid-cols-3 items-center">
+            {/* Profil à gauche */}
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium">
+                  {user?.nom?.charAt(0)}
+                </span>
+              </div>
+            </div>
+            
+            {/* Filière au centre */}
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-emerald-200">
+                {user?.filiere}
+              </h1>
+            </div>
+            
+            {/* Déconnexion à droite */}
+            <div className="flex justify-end">
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
+              >
+                Déconnexion
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-4 md:py-8">
+        <div className="mb-8 md:mb-16">
+          <div className="bg-[#002633] rounded-lg p-4 md:p-8 shadow-lg">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">
+              Attribution des parrains
+            </h2>
+            <SponsorshipAnimation />
+          </div>
+        </div>
+
+        <section className="bg-[#002633] rounded-lg p-4 md:p-8 shadow-lg">
+          <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-8">
+            Paires formées
+          </h2>
+          <div className="overflow-x-auto">
+            <MatchList matches={associations} />
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

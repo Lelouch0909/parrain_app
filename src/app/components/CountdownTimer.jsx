@@ -16,7 +16,7 @@ export function CountdownTimer() {
         // Get next Friday at 15:00
         const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + (5 + 7 - targetDate.getDay()) % 7);
-        targetDate.setHours(15, 0, 0, 0);
+        targetDate.setHours(18, 0, 0, 0);
 
         const timer = setInterval(() => {
             const remaining = calculateTimeRemaining(targetDate);
@@ -44,7 +44,7 @@ export function CountdownTimer() {
                     </h2>
                     <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-4 md:p-8 rounded-xl shadow-lg border border-gray-700">
                         <p className="text-emerald-200 text-base md:text-xl">
-                            La liste sera bientôt disponible...
+                            Vous recevrez un mail a l attribution de votre parrain/filleul...
                         </p>
                     </div>
                 </div>

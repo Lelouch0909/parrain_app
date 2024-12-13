@@ -74,16 +74,18 @@ export default function Register() {
       const generatedLink = `/register?filiereId=${formData.filiereId}&niveau=${formData.niveau}`;
       console.log("Generated Link:", generatedLink);
 
-      const etudiant = new Etudiant(
-        formData.name,
-        filiere,
-        formData.matricule,
-        formData.numero,
-        formData.email,
-        formData.niveau,
-        formData.password,
-        formData.photo
-      );
+   
+      const etudiant = {
+        nom: formData.name,
+        filiereId: filiere, // Utilisation directe du nom de la filière créée
+        matricule: formData.matricule,
+        numero: formData.numero,
+        email: formData.email,
+        niveau: formData.niveau,
+        motdepasse: formData.password,
+        photo: formData.photo,
+        cto: false
+    };
       dispatch(createEtudiant(etudiant))
     }
   };

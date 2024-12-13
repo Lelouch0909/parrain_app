@@ -1,41 +1,33 @@
-import Image from "next/image";
-import { ArrowLeftRight } from "lucide-react";
-
 export default function MatchList({ matches }) {
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {matches.map((match, index) => (
-        <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-card hover:bg-accent transition-colors">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="flex items-center gap-2">
-              <div className="relative h-10 w-10 rounded-full overflow-hidden">
-                <Image
-                  src={match.mentor.image}
-                  alt={match.mentor.name}
-                  fill
-                  className="object-cover"
-                />
+        <div 
+          key={index}
+          className="bg-[#001824] p-4 rounded-lg shadow-md border border-gray-700"
+        >
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium">
+                  {match.mentor.name.charAt(0)}
+                </span>
               </div>
               <div>
-                <h3 className="text-sm font-medium">{match.mentor.name}</h3>
-                <p className="text-xs text-muted-foreground">{match.mentor.role}</p>
+                <h3 className="font-medium text-emerald-400">Parrain</h3>
+                <p className="text-sm text-emerald-200">{match.mentor.name}</p>
               </div>
             </div>
-            
-            <ArrowLeftRight className="h-4 w-4 text-muted-foreground mx-4" />
-            
-            <div className="flex items-center gap-2">
-              <div className="relative h-10 w-10 rounded-full overflow-hidden">
-                <Image
-                  src={match.mentee.image}
-                  alt={match.mentee.name}
-                  fill
-                  className="object-cover"
-                />
+
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium">
+                  {match.mentee.name.charAt(0)}
+                </span>
               </div>
               <div>
-                <h3 className="text-sm font-medium">{match.mentee.name}</h3>
-                <p className="text-xs text-muted-foreground">{match.mentee.role}</p>
+                <h3 className="font-medium text-emerald-400">Filleul</h3>
+                <p className="text-sm text-emerald-200">{match.mentee.name}</p>
               </div>
             </div>
           </div>

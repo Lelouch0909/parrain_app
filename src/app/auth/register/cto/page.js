@@ -93,19 +93,28 @@ export default function Register() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Trouver la filière sélectionnée
+        const selectedFiliere = filieres.find((f) => f.nom_filiere === newFiliere);
+
+        if (!selectedFiliere) {
+            alert("Veuillez sélectionner une filière valide");
+            return;
+        }
+
         const etudiant = {
             nom: formData.name,
-            filiereId: filieres.find((f) => f.$id === newFiliere)?.nom_filiere || "",
+            filiereId: selectedFiliere.$id, // Utilisation directe du nom de la filière créée
             matricule: formData.matricule,
             numero: formData.numero,
             email: formData.email,
             niveau: formData.niveau,
             motdepasse: formData.password,
             photo: formData.photo,
-            type_compte: true,
+            cto: true,
         };
+        console.log(etudiant);
 
-        dispatch(createEtudiant(etudiant));
+      //  dispatch(createEtudiant(etudiant));
     };
 
     // Ajout du loader pendant la création

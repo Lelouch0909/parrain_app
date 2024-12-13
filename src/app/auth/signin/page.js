@@ -32,17 +32,20 @@ export default function SignIn() {
   };
   useEffect(() => {
     dispatch(getCurrentUser());
+    console.log("laaucnh");
   }, [dispatch]);
 
   // Loader centré
  
   useEffect(() => {
-    console.log(user);
     
     // Redirection vers les dashboards
     if (user) {
+      console.log(user);
+
        user.cto ? router.push("/dashboard/admin") : router.push("/dashboard");
-    }
+    }      console.log(user);
+
    
   }, [user, router]);
  if (loading) {

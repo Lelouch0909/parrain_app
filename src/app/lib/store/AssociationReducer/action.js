@@ -196,3 +196,53 @@ export const createAssociationsForFiliere = createAsyncThunk(
     }
   }
 );
+
+export const getFullAssociations = createAsyncThunk(
+  "association/getFullAssociations",
+  async (filiereId, { rejectWithValue }) => {
+    try {
+      // 1. Récupérer toutes les associations de la filière
+      const associations = await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.etudiants_associationCollectionId,
+        [
+          Query.equal("idFiliere", filiereId)
+        ]
+      );
+
+      if (!associations.documents.length) {
+        return [];
+      }
+
+      // 2. Récupérer tous les étudiants concernés
+      const allParrainIds = associations.documents.map(assoc => assoc.idParrain);
+      const allFilleulIds = associations.documents.flatMap(assoc => assoc.idFilleuls);
+
+      const allStudents = await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.etudiantCollectionId,
+        [
+          Query.equal("accountId", [...allParrainIds, ...allFilleulIds])
+        ]
+      );
+
+      // 3. Créer un map pour un accès rapide aux étudiants
+      const studentMap = allStudents.documents.reduce((acc, student) => {
+        acc[student.accountId] = student;
+        return acc;
+      }, {});
+
+      // 4. Transformer les associations avec les données complètes des étudiants
+      const fullAssociations = associations.documents.map(assoc => ({
+        id: assoc.$id,
+        parrain: studentMap[assoc.idParrain],
+        filleuls: assoc.idFilleuls.map(filleulId => studentMap[filleulId]).filter(Boolean)
+      }));
+
+      return fullAssociations;
+
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
