@@ -1,4 +1,4 @@
-import { getFilieres, getAssociations, createAssociationsForFiliere } from "./action";
+import { getFilieres, getAssociations, createAssociationsForFiliere, getAllAssociations } from "./action";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -7,6 +7,7 @@ const { createSlice } = require("@reduxjs/toolkit");
 const initialState = {
   filleul: [],
   parrain: null,
+  associations: [],
   error: "",
   loading: false,
 };
@@ -44,6 +45,18 @@ export const associationReducer = createSlice({
         state.loading = false;
       })
       .addCase(createAssociationsForFiliere.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(getAllAssociations.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(getAllAssociations.fulfilled, (state, action) => {
+        state.loading = false;
+        state.associations = action.payload;
+      })
+      .addCase(getAllAssociations.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });

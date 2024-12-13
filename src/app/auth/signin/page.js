@@ -1,20 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { connection } from "../../lib/store/AuthReducer/action";
 import { getCurrentUser } from "../../lib/store/AuthReducer/action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignIn() {
   const router = useRouter();
+  const dispatch = useDispatch();
+const {user} = useSelector((state) => {
+    return state.auth;
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]); 
+  useEffect(() => {
+  console.log(user);
+  }, [user]);
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle sign in logic here
