@@ -37,7 +37,6 @@ export default function Home() {
     );
   }
 
-  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-[#001219] text-emerald-400">
@@ -56,7 +55,7 @@ export default function Home() {
             {/* Filière au centre */}
             <div className="text-center">
               <h1 className="text-xl font-bold text-emerald-200">
-                {user?.filiere}
+                {user?.filiere.nom_filiere}
               </h1>
             </div>
             

@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getFullAssociations } from '../lib/store/AssociationReducer/action';
+import { getFullAssociations, createAssociationsForFiliere } from '../lib/store/AssociationReducer/action';
 
 export default function SponsorshipAnimation({ onMatch }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMatchButtonVisible, setIsMatchButtonVisible] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { associations, loading } = useSelector((state) => state.associations);
@@ -16,10 +17,20 @@ export default function SponsorshipAnimation({ onMatch }) {
     }
   }, [dispatch, user]);
 
-  const handleMatch = () => {
-    if (associations?.[currentIndex]) {
-      onMatch(associations[currentIndex]);
+  const handleMatch = async () => {
+    if (!user?.filiere) return;
+    
+    setIsAnimating(true);
+    try {
+      console.log(user.filiere.$id);
+      console.log(user.filiere);
+      await dispatch(createAssociationsForFiliere(user.filiere.$id)).unwrap();
+      await dispatch(getFullAssociations(user.filiere.$id)).unwrap();
       setIsMatchButtonVisible(false);
+    } catch (error) {
+      console.error("Erreur lors du parrainage:", error);
+    } finally {
+      setIsAnimating(false);
     }
   };
 
@@ -112,16 +123,17 @@ export default function SponsorshipAnimation({ onMatch }) {
         {isMatchButtonVisible && (
           <button
             onClick={handleMatch}
-            className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
-            disabled={!currentAssociation}
+            disabled={isAnimating || !user?.filiere}
+            className={`px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors
+              ${(isAnimating || !user?.filiere) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Lancer le parrainage
+            {isAnimating ? 'Création en cours...' : 'Lancer le parrainage'}
           </button>
         )}
         <button
           onClick={handleSkip}
           className="px-6 py-2 bg-gray-600/50 hover:bg-gray-700/50 text-white/75 rounded-lg transition-colors"
-          disabled={!associations?.length}
+          disabled={!associations?.length || isAnimating}
         >
           Passer
         </button>

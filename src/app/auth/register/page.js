@@ -8,10 +8,13 @@ import { Etudiant } from "../../lib/const";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilieres } from "../../lib/store/FiliereReducer/action";
 import "./style.css";
+import { getCurrentUser } from "../../lib/store/AuthReducer/action";
 
 export default function Register() {
   const router = useRouter();
   const { account } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [filiere, setFiliere] = useState("");
@@ -51,13 +54,16 @@ export default function Register() {
     // Charger la liste des filières
     dispatch(getFilieres());
   }, [dispatch]);
+
   useEffect(() => {
-    if (account) {
-      console.log(account);
-      
-      router.push("../dashboard");
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      user.cto ? router.push("/dashboard/admin") : router.push("/dashboard");
     }
-  }, [account, router]);
+  }, [user, router]);
 
   useEffect(() => {
       console.log(account);
@@ -74,18 +80,17 @@ export default function Register() {
       const generatedLink = `/register?filiereId=${formData.filiereId}&niveau=${formData.niveau}`;
       console.log("Generated Link:", generatedLink);
 
-   
-      const etudiant = {
-        nom: formData.name,
-        filiereId: filiere, // Utilisation directe du nom de la filière créée
-        matricule: formData.matricule,
-        numero: formData.numero,
-        email: formData.email,
-        niveau: formData.niveau,
-        motdepasse: formData.password,
-        photo: formData.photo,
-        cto: false
-    };
+      const etudiant = new Etudiant(
+        formData.name,
+        filiere,
+        formData.matricule,
+        formData.numero,
+        formData.email,
+        formData.niveau,
+        formData.password,
+        formData.photo,
+        false
+      );
       dispatch(createEtudiant(etudiant))
     }
   };
@@ -93,6 +98,15 @@ export default function Register() {
   const handleFileChange = (e) => {
     setFormData({ ...formData, photo: e.target.files[0] });
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#001219]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500 mb-4"></div>
+        <p className="text-emerald-400">Création de votre compte en cours...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md">

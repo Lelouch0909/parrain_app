@@ -14,6 +14,7 @@ export const connection = createAsyncThunk(
 
       await account.createEmailPasswordSession(login, password);
       const currentUser = await getCurrentUser();
+      console.log(currentUser);
       
       return {
         nom: currentUser.nom,
@@ -23,6 +24,7 @@ export const connection = createAsyncThunk(
         email: currentUser.email,
         niveau: currentUser.niveau,
         photo_id: currentUser.photo_id,
+        cto: currentUser.cto
       };
     } catch (error) {
       console.log(error);
@@ -35,21 +37,13 @@ export const connection = createAsyncThunk(
 // Création d'étudiant
 export const createEtudiant = createAsyncThunk(
   "auth/createUser",
-  async (userData, { rejectWithValue }) => {
+  async (user, { rejectWithValue }) => {
     try {
       console.log("creation de l'etudiant");
       
-      const user = new Etudiant(
-        userData.nom,
-        userData.filiereId,
-        userData.matricule,
-        userData.numero,
-        userData.email,
-        userData.niveau,
-        userData.motdepasse,
-        userData.photo,
-        userData.cto
-      );
+      if (!(user instanceof Etudiant)) {
+        throw new Error("user is not an instance of Etudiant");
+      }
 
       const newAccount = await account.create(
         ID.unique(),
@@ -83,24 +77,24 @@ export const createEtudiant = createAsyncThunk(
           type_compte: user.type_compte,
           numero: user.numero,
           filiere: user.filiereId,
-          niveau: user.niveau,
-          cto: user.cto
+          niveau: user.niveau
         }
       );
 
-      // Retourner un objet simple au lieu d'une instance de classe
-      return {
-        nom: newUser.nom,
-        filiere: newUser.filiere,
-        matricule: newUser.matricule,
-        numero: newUser.numero,
-        email: newUser.email,
-        niveau: newUser.niveau,
-        photo_id: newUser.photo_id,
-        type_compte: newUser.type_compte
-      };
+      return new Etudiant(
+        newUser.nom,
+        newUser.filiere,
+        newUser.matricule,
+        newUser.numero,
+        newUser.email,
+        newUser.niveau,
+        null,
+        newUser.photo_id,
+        newUser.cto
+      );
     } catch (error) {
       console.log(error);
+      
       return rejectWithValue(error.message);
     }
   }
@@ -146,7 +140,6 @@ export const getCurrentUser = createAsyncThunk(
         email: userData.email,
         niveau: userData.niveau,
         photo_id: userData.photo_id,
-        filiere: userData.filiere,
         cto: userData.cto
       };
     } catch (error) {

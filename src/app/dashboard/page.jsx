@@ -2,22 +2,29 @@
 import React, { useEffect } from "react";
 import { CountdownTimer } from "../components/CountdownTimer";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../lib/store/AuthReducer/action";
+import { getCurrentUser, signOut } from "../lib/store/AuthReducer/action";
 import { useRouter } from "next/navigation";
 
 function App() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { user, loading, error } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(signOut());
   };
+  const { user, loading } = useSelector((state) => state.auth);
+  const { associations } = useSelector((state) => state.associations);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/auth/signin");
+      router.back();
     }
+    console.log(user);
+    
   }, [user, loading, router]);
 
   if (loading) {
